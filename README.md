@@ -74,10 +74,3 @@ cd apps/frontend
 npm run test:run -- --coverage
 ```
 
-## CI/CD
-
-- **Lint & Type Check**, **Tests**, **Build**: run in `apps/frontend`
-- **Deploy**: GitHub Pages (main branch)
-
-Details: [`.github/README.md`](.github/README.md).
-

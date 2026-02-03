@@ -14,7 +14,9 @@ export const UfoMarker = memo(function UfoMarker({ ufo }: UfoMarkerProps) {
   useEffect(() => {
     const onZoom = () => setZoom(map.getZoom());
     map.on('zoomend', onZoom);
-    return () => map.off('zoomend', onZoom);
+    return () => {
+      map.off('zoomend', onZoom);
+    };
   }, [map]);
 
   const icon = createRotatedUfoIcon(ufo.heading, ufo.status === 'lost', zoom);
