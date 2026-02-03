@@ -1,6 +1,17 @@
 # UFO Tracker
 
-Real-time UFO tracking application with live map visualization.
+Real-time UFO (drone) tracking: live map, positions from an SSE stream, and automatic status by how long a drone has been silent.
+
+**How it works:** The frontend connects to the server over SSE and receives position updates (id, lat, lng, heading). Each drone is shown as a marker. If a drone stops sending updates, it is first marked **lost** (inactive, grey icon), then **removed** from the map after a longer silence.
+
+### Status timings
+
+| Event | After no updates for |
+|-------|----------------------|
+| **Lost** (inactive, grey marker) | 1 minute |
+| **Removed** (disappears from map) | 5 minutes |
+
+Cleanup runs every 10 seconds, so the actual transition can be up to ~10 s after the threshold.
 
 ## Tech Stack
 
