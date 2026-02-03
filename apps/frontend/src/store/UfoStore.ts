@@ -12,6 +12,10 @@ export class UfoStore {
     });
   }
 
+  get ufoIds(): string[] {
+    return Array.from(this.ufos.keys());
+  }
+
   get ufoList(): Ufo[] {
     return Array.from(this.ufos.values());
   }

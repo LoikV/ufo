@@ -35,7 +35,7 @@ export function createRotatedUfoIcon(
   const half = Math.round(size / 2);
 
   const filter = isLost
-    ? 'grayscale(40%) sepia(0.7) hue-rotate(-20deg) brightness(0.8)'
+    ? 'grayscale(100%) brightness(0.4) opacity(0.7)'
     : 'brightness(0)';
 
   const html = `

@@ -1,13 +1,16 @@
-import { memo, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 import { Marker, useMap } from 'react-leaflet';
-import type { Ufo } from '../../../types/ufo';
+import { useUfoStore } from '../../../store/StoreContext';
 import { createRotatedUfoIcon } from './utils/createUfoIconFromImage';
 
 interface UfoMarkerProps {
-  ufo: Ufo;
+  id: string;
 }
 
-export const UfoMarker = memo(function UfoMarker({ ufo }: UfoMarkerProps) {
+export const UfoMarker = observer(function UfoMarker({ id }: UfoMarkerProps) {
+  const ufoStore = useUfoStore();
+  const ufo = ufoStore.ufos.get(id);
   const map = useMap();
   const [zoom, setZoom] = useState(() => map.getZoom());
 
@@ -18,6 +21,8 @@ export const UfoMarker = memo(function UfoMarker({ ufo }: UfoMarkerProps) {
       map.off('zoomend', onZoom);
     };
   }, [map]);
+
+  if (!ufo) return null;
 
   const icon = createRotatedUfoIcon(ufo.heading, ufo.status === 'lost', zoom);
 

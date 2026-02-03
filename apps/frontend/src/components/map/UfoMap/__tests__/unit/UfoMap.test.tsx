@@ -5,7 +5,8 @@ import type { Ufo } from '../../../../../types/ufo';
 import { UfoMap } from '../../UfoMap';
 
 const mockUfoStore = {
-  ufoList: [] as Ufo[],
+  ufoIds: [] as string[],
+  ufos: new Map<string, Ufo>(),
 };
 
 vi.mock('../../../../../store/StoreContext', () => ({
@@ -26,7 +27,8 @@ const createMockUfo = (id: string, rest?: Partial<Ufo>): Ufo => ({
 
 describe('UfoMap', () => {
   beforeEach(() => {
-    mockUfoStore.ufoList = [];
+    mockUfoStore.ufoIds = [];
+    mockUfoStore.ufos.clear();
   });
 
   it('should render map container', () => {
@@ -58,7 +60,7 @@ describe('UfoMap', () => {
 
   it('should render with empty UFO list', () => {
     expect.hasAssertions();
-    mockUfoStore.ufoList = [];
+    mockUfoStore.ufoIds = [];
     render(<UfoMap />);
     expect(screen.getByTestId('map-container')).toBeInTheDocument();
     expect(screen.queryAllByTestId('leaflet-marker')).toHaveLength(0);
@@ -67,7 +69,8 @@ describe('UfoMap', () => {
   it('should render with single UFO', () => {
     expect.hasAssertions();
     const ufo = createMockUfo('ufo-1');
-    mockUfoStore.ufoList = [ufo];
+    mockUfoStore.ufos.set('ufo-1', ufo);
+    mockUfoStore.ufoIds = ['ufo-1'];
     render(<UfoMap />);
     const markers = screen.getAllByTestId('leaflet-marker');
     expect(markers).toHaveLength(1);
@@ -84,7 +87,8 @@ describe('UfoMap', () => {
       createMockUfo('ufo-2'),
       createMockUfo('ufo-3'),
     ];
-    mockUfoStore.ufoList = ufoList;
+    ufoList.forEach((ufo) => mockUfoStore.ufos.set(ufo.id, ufo));
+    mockUfoStore.ufoIds = ufoList.map((u) => u.id);
     render(<UfoMap />);
     const markers = screen.getAllByTestId('leaflet-marker');
     expect(markers).toHaveLength(3);
@@ -98,10 +102,9 @@ describe('UfoMap', () => {
 
   it('should render with active and lost UFOs', () => {
     expect.hasAssertions();
-    mockUfoStore.ufoList = [
-      createMockUfo('ufo-active', { status: 'active' }),
-      createMockUfo('ufo-lost', { status: 'lost' }),
-    ];
+    mockUfoStore.ufos.set('ufo-active', createMockUfo('ufo-active', { status: 'active' }));
+    mockUfoStore.ufos.set('ufo-lost', createMockUfo('ufo-lost', { status: 'lost' }));
+    mockUfoStore.ufoIds = ['ufo-active', 'ufo-lost'];
     render(<UfoMap />);
     expect(screen.getAllByTestId('leaflet-marker')).toHaveLength(2);
   });
@@ -109,7 +112,8 @@ describe('UfoMap', () => {
   it('should handle large number of UFOs', () => {
     expect.hasAssertions();
     const ufos = Array.from({ length: 100 }, (_, i) => createMockUfo(`ufo-${i}`));
-    mockUfoStore.ufoList = ufos;
+    ufos.forEach((ufo) => mockUfoStore.ufos.set(ufo.id, ufo));
+    mockUfoStore.ufoIds = ufos.map((u) => u.id);
     render(<UfoMap />);
     expect(screen.getAllByTestId('leaflet-marker')).toHaveLength(100);
   });

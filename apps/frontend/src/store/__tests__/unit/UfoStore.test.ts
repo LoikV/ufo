@@ -28,6 +28,7 @@ describe('UfoStore', () => {
   });
 
   it('starts empty', () => {
+    expect(store.ufoIds).toEqual([]);
     expect(store.ufoList).toEqual([]);
     expect(store.totalCount).toBe(0);
     expect(store.activeCount).toBe(0);
