@@ -80,3 +80,4 @@ npm run test:run -- --coverage
 - **Deploy**: GitHub Pages (main branch)
 
 Details: [`.github/README.md`](.github/README.md).
+
